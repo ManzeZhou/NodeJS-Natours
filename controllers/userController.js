@@ -1,3 +1,4 @@
+/* eslint-disable */
 // create users
 exports.getAllUsers = (req, res) => {
     res.status(500).json({
