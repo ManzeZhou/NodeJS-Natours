@@ -1,0 +1,83 @@
+const AppError = require('../utils/appError');
+
+const handleCastErrorDB = (err) => {
+  const message = `Invalid ${err.path}: ${err.value}.`;
+  return new AppError(message, 400);
+};
+
+const handleDuplicateFieldsDB = (err) => {
+  const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
+  console.log(value);
+
+  const message = `Duplicate field value: ${value}. Please use another value!`;
+  return new AppError(message, 400);
+};
+
+const handleValidationErrorDB = (err) => {
+  // can have many validation errors in an object
+  const errors = Object.values(err.errors).map((el) => el.message);
+  // combine messages together
+  const message = `Invalid input data. ${errors.join('. ')}`;
+  return new AppError(message, 400);
+};
+
+const sendErrorDev = (err, res) => {
+  res.status(err.statusCode).json({
+    status: err.status,
+    error: err,
+    message: err.message,
+    stack: err.stack,
+  });
+};
+
+const sendErrorProd = (err, res) => {
+  // operational trusted error: send message to client
+  if (err.isOperational) {
+    res.status(err.statusCode).json({
+      status: err.status,
+      message: err.message,
+    });
+  } else {
+    // Programming or other unknown error: don't leak error details
+    console.error('ERROR', err);
+
+    res.status(500).json({
+      status: 'err',
+      message: 'Something went very wrong',
+    });
+  }
+};
+
+module.exports = (err, req, res, next) => {
+  // show stack track
+  // console.log('err--->', err.stack);
+  // define different error status and message
+  err.statusCode = err.statusCode || 500;
+  err.status = err.status || 'error';
+
+  console.log(process.env.NODE_ENV);
+
+  if (process.env.NODE_ENV === 'development') {
+    console.log('development');
+    sendErrorDev(err, res);
+  } else {
+    let error = { ...err };
+    // 1) get a tour with non exist id from db error
+    if (error.name === 'CastError') error = handleCastErrorDB(error);
+    // 2) create a tour with an existed name
+    if (error.code === 11000) error = handleDuplicateFieldsDB(error);
+    // 3) update a tour with rating more than 5/ difficulty input that are not allowed: validationError
+    if (error.name === 'ValidationError')
+      error = handleValidationErrorDB(error);
+    sendErrorProd(error, res);
+  }
+  // else if (process.env.NODE_ENV === 'production') {
+  //   console.log(' you  are  in production');
+  //  update a tour with rating more than 5, get a tour with non exist id, create a tour with an existed name: DB Error
+  //   let error = { ...err };
+  // 1) get a tour with non exist id
+  //   if (error.name === 'CastError') error = handleCastErrorDB(error);
+  //
+  //   sendErrorProd(error, res);
+  // }
+};

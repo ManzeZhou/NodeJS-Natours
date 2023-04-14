@@ -1,4 +1,3 @@
-/* eslint-disable */
 class APIFeatures {
   constructor(query, queryString) {
     this.query = query;
@@ -8,9 +7,9 @@ class APIFeatures {
   filter() {
     const queryObj = { ...this.queryString };
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
-    excludedFields.forEach(el => delete queryObj[el]);
+    excludedFields.forEach((el) => delete queryObj[el]);
     let queryStr = JSON.stringify(queryObj);
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
     this.query = this.query.find(JSON.parse(queryStr));
     // let query =  Tour.find(JSON.parse(queryStr));
 
@@ -18,25 +17,25 @@ class APIFeatures {
   }
 
   sort() {
-    if(this.queryString.sort) {
+    if (this.queryString.sort) {
       // sort ('price ratingsAverage')
       const sortBy = this.queryString.sort.split(',').join(' ');
       this.query = this.query.sort(sortBy);
     } else {
       // if user doesn't input req.param, set a default one
       // query=query.sort('-createdAt');
-      this.query=this.query.sort('-createdAt _id');
+      this.query = this.query.sort('-createdAt _id');
     }
-    return this
+    return this;
   }
 
   limitFields() {
-    if(this.queryString.fields) {
+    if (this.queryString.fields) {
       const fields = this.queryString.fields.split(',').join(' ');
       this.query = this.query.select(fields);
     } else {
       // set default: remove some fields: - to excluding
-      this.query= this.query.select('-__v');
+      this.query = this.query.select('-__v');
     }
     return this;
   }

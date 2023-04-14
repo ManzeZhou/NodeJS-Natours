@@ -1,4 +1,3 @@
-/* eslint-disable */
 // create a new router as a middleware
 const express = require('express');
 
