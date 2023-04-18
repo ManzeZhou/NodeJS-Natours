@@ -23,6 +23,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide a password'],
     minlength: 8,
+    // do not show password in the response
+    select: false
   },
   passwordConfirm: {
     type: String,
@@ -50,6 +52,12 @@ userSchema.pre('save', async function (next) {
 
   next();
 });
+
+// const an instance available for all users documents to check input password is as the same as password in the database
+userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
+  // encrypt input password and compare it with the one in the db
+  return await bcrypt.compare(candidatePassword, userPassword);
+}
 
 const User = mongoose.model('user', userSchema);
 
