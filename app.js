@@ -29,6 +29,7 @@ app.use(express.json());
 app.use((req, res, next) => {
   // add current time to the request
   req.requestTime = new Date().toISOString();
+  // console.log(req.headers);
   next();
 });
 

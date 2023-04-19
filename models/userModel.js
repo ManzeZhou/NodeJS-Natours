@@ -19,6 +19,11 @@ const userSchema = new mongoose.Schema({
     validate: [validator.isEmail, 'Please provide a valid email'],
   },
   photo: String,
+  role: {
+    type: String,
+    enum: ['user', 'guide', 'lead-guide', 'admin' ],
+    default: 'user'
+  },
   password: {
     type: String,
     required: [true, 'Please provide a password'],
@@ -34,9 +39,10 @@ const userSchema = new mongoose.Schema({
       validator: function (el) {
         return el === this.password;
       },
-      message: 'Passwords are not the same!',
-    },
+      message: 'Passwords are not the same!'
+    }
   },
+  passwordChangedAt: Date
 });
 
 // pre hook to encrypt password
@@ -57,6 +63,18 @@ userSchema.pre('save', async function (next) {
 userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
   // encrypt input password and compare it with the one in the db
   return await bcrypt.compare(candidatePassword, userPassword);
+};
+
+// check if user changed password after token is issued
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp){
+  if(this.passwordChangedAt) {
+    const changedTimestamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
+    // console.log('compare ------>',changedTimestamp, JWTTimestamp);
+    return JWTTimestamp < changedTimestamp;
+  }
+
+  // false means password is not changed after token issued
+  return false;
 }
 
 const User = mongoose.model('user', userSchema);

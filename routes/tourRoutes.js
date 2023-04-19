@@ -4,6 +4,8 @@ const express = require('express');
 const tourController = require('./../controllers/tourController');
 // or destructured {getAllTours, createTour...} = require('./../controllers/tourController')
 
+const authController = require('./../controllers/authController');
+
 const router = express.Router();
 
 // get tour id
@@ -24,19 +26,25 @@ router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
 // for get all tours and create a tour
 
 // app.route('/api/v1/tours') use express.Router to manage route
+// protect getAllTours only show tour lists when user sign in
 router
   .route('/')
-  .get(tourController.getAllTours)
+  .get(authController.protect, tourController.getAllTours)
   .post(tourController.createTour);
 // .post(tourController.checkBody,tourController.createTour);
 
 // route for update a tour, get a tour and delete a tour
 
 // app.route('/api/v1/tours/:id')
+// only allow admin user login and delete tours
 router
   .route('/:id')
   .get(tourController.getTour)
   .patch(tourController.updateTour)
-  .delete(tourController.deleteTour);
+  .delete(
+      authController.protect,
+      authController.restrictTo('admin', 'lead-guide'),
+      tourController.deleteTour
+  );
 
 module.exports = router;
