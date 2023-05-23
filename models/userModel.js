@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+
 const mongoose = require('mongoose');
 
 // validator package for email validation
@@ -42,7 +44,9 @@ const userSchema = new mongoose.Schema({
       message: 'Passwords are not the same!'
     }
   },
-  passwordChangedAt: Date
+  passwordChangedAt: Date,
+  passwordResetToken: String,
+  passwordResetExpires: Date
 });
 
 // pre hook to encrypt password
@@ -75,6 +79,25 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp){
 
   // false means password is not changed after token issued
   return false;
+};
+
+userSchema.methods.createPasswordRestToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  this.passwordResetToken = crypto
+      .createHash('SHA256')
+      .update(resetToken)
+      .digest('hex');
+
+  console.log({resetToken}, this.passwordResetToken);
+
+  // this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+
+  const now = new Date();
+  const tenMinutesLater = new Date(now.getTime() + 10 * 60 * 1000 - (now.getTimezoneOffset() * 60000));
+
+  this.passwordResetExpires = tenMinutesLater.toISOString();
+// send token to user email
+  return resetToken;
 }
 
 const User = mongoose.model('user', userSchema);
