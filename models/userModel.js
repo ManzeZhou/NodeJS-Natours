@@ -63,6 +63,15 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
+userSchema.pre('save', function (next) {
+  // if password doesn't change
+  if (!this.isModified('password') || this.isNew) return next();
+
+
+  this.passwordChangedAt = new Date(new Date().getTime()  - (new Date().getTimezoneOffset() * 60000));
+  next();
+})
+
 // const an instance available for all users documents to check input password is as the same as password in the database
 userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
   // encrypt input password and compare it with the one in the db
