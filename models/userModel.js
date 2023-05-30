@@ -67,7 +67,7 @@ userSchema.pre('save', function (next) {
   // if password doesn't change
   if (!this.isModified('password') || this.isNew) return next();
 
-
+  // transform the time into local time
   this.passwordChangedAt = new Date(new Date().getTime()  - (new Date().getTimezoneOffset() * 60000));
   next();
 })
