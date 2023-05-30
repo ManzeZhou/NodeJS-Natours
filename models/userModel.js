@@ -46,7 +46,12 @@ const userSchema = new mongoose.Schema({
   },
   passwordChangedAt: Date,
   passwordResetToken: String,
-  passwordResetExpires: Date
+  passwordResetExpires: Date,
+  active: {
+    type: Boolean,
+    default: true,
+    select: false
+  }
 });
 
 // pre hook to encrypt password
@@ -60,6 +65,12 @@ userSchema.pre('save', async function (next) {
   // do not persist confirm password in the database
   this.passwordConfirm = undefined;
 
+  next();
+});
+
+userSchema.pre(/^find/, function (next) {
+  // this points to the current query: only find user's active is true
+  this.find({ active: { $ne: false} });
   next();
 });
 
