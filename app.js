@@ -2,6 +2,8 @@ const express = require('express');
 const morgan = require('morgan');
 // limit request rate
 const rateLimit = require('express-rate-limit');
+// set security http headers
+const helmet = require('helmet');
 const app = express();
 
 const AppError = require('./utils/appError');
@@ -10,6 +12,10 @@ const globalErrorHandler = require('./controllers/errorController');
 // 1 MIDDLEWARES
 // only use morgan in development environment
 console.log(process.env.NODE_ENV);
+// Set Security HTTP headers
+app.use(helmet())
+
+// dev login
 if (process.env.NODE_ENV === 'development') {
   // morgan dev show status code, speed information
   app.use(morgan('dev'));
@@ -24,11 +30,12 @@ const limiter = rateLimit({
 
 app.use('/api', limiter);
 
+
 // set serving static file by using middlewares for overview.html, set public folder as static, only use url:http://127.0.0.1:3000/overview.html
 app.use(express.static(`${__dirname}/public`));
 
 // middleware: modify incoming request data otherwise req.body is going to be undefined
-app.use(express.json());
+app.use(express.json({ limit: '10kb' }));
 
 // build own middleware
 // app.use((req, res, next) => {
@@ -37,6 +44,8 @@ app.use(express.json());
 //   next();
 // });
 
+
+// test middleware
 app.use((req, res, next) => {
   // add current time to the request
   req.requestTime = new Date().toISOString();
