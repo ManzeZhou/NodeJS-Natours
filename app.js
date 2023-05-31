@@ -1,5 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
+// limit request rate
+const rateLimit = require('express-rate-limit');
 const app = express();
 
 const AppError = require('./utils/appError');
@@ -11,7 +13,16 @@ console.log(process.env.NODE_ENV);
 if (process.env.NODE_ENV === 'development') {
   // morgan dev show status code, speed information
   app.use(morgan('dev'));
-}
+};
+
+const limiter = rateLimit({
+  // 100 request from same IP in 1 hour
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many request from this IP,  please try again in an hour!'
+});
+
+app.use('/api', limiter);
 
 // set serving static file by using middlewares for overview.html, set public folder as static, only use url:http://127.0.0.1:3000/overview.html
 app.use(express.static(`${__dirname}/public`));
