@@ -6,6 +6,8 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
+// preventing params pollution
+const hpp = require('hpp');
 const app = express();
 
 const AppError = require('./utils/appError');
@@ -44,6 +46,14 @@ app.use(express.json({ limit: '10kb' }));
 app.use(mongoSanitize());
 // Data sanitization against XSS: malicious HTML code
 app.use(xss());
+
+// prevent parameter pollution: duplicate fields
+// can create white list for the fields duplicated: duration=9&duration=8
+app.use(hpp({
+  whitelist: [
+      'duration', 'ratingsAverage', 'ratingsQuantity', 'maxGroupSize', 'difficulty', 'price'
+  ]
+}));
 
 // build own middleware
 // app.use((req, res, next) => {
