@@ -4,6 +4,8 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 // set security http headers
 const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
 const app = express();
 
 const AppError = require('./utils/appError');
@@ -36,6 +38,12 @@ app.use(express.static(`${__dirname}/public`));
 
 // middleware: modify incoming request data otherwise req.body is going to be undefined
 app.use(express.json({ limit: '10kb' }));
+
+// Data sanitization against NoSQL query injection
+// filter out all $ and .
+app.use(mongoSanitize());
+// Data sanitization against XSS: malicious HTML code
+app.use(xss());
 
 // build own middleware
 // app.use((req, res, next) => {
