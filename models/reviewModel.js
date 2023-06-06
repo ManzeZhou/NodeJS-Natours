@@ -33,6 +33,18 @@ const reviewSchema = new mongoose.Schema(
     }
 );
 
+// show tour and user info when request related to find reviews with only selected fields shown
+reviewSchema.pre(/^find/, function (next) {
+    this.populate({
+        path:'tour',
+        select: 'name'
+    }).populate({
+        path:'user',
+        select: 'name photo'
+    });
+    next();
+})
+
 const Review = mongoose.model('Review', reviewSchema);
 
 module.exports = Review;
