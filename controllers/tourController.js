@@ -165,7 +165,7 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
 exports.getTour = catchAsync(async (req, res, next) => {
   // find the specific tour based on id in database
   // use popluate to replace guides id with actual user info, it is not shown in the database but will show after query with tour id
-  const tour = await Tour.findById(req.params.id);
+  const tour = await Tour.findById(req.params.id).populate('Reviews');
 
   // if id format is correct but find null tour: 404 error
   if (!tour) {

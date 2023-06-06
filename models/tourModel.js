@@ -120,12 +120,19 @@ const tourSchema = new mongoose.Schema(
                 type: mongoose.Schema.ObjectId,
                 ref: 'User'
             }
-        ]
+        ],
+        reviews: [
+            {
+                type: mongoose.Schema.ObjectId,
+                ref: 'Review'
+            }
+        ],
+
     },
     // second object:schema options
     {
         toJSON: {virtuals: true},
-        toObject: {virtuals: true},
+        toObject: {virtuals: true}
     }
 );
 
@@ -134,6 +141,13 @@ const tourSchema = new mongoose.Schema(
 tourSchema.virtual('durationWeeks').get(function () {
     return this.duration / 7;
 });
+
+// Virtual populate
+tourSchema.virtual('Reviews', {
+    ref: 'Review',
+    foreignField: 'tour',
+    localField: '_id'
+})
 
 // mongo db middleware: 1 DOCUMENT middleware
 // pre middleware run before an event: run before save() and create()
