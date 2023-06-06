@@ -4,8 +4,8 @@ const reviewController = require('./../controllers/reviewController');
 
 const authController = require('./../controllers/authController');
 
-
-const router = express.Router();
+// user mergeParams to let reviewRoutes access to tourId in tourRoutes
+const router = express.Router({ mergeParams: true });
 
 // use auth protect to only allow protected users to create reviews
 router

@@ -4,11 +4,25 @@ const express = require('express');
 const tourController = require('./../controllers/tourController');
 // or destructured {getAllTours, createTour...} = require('./../controllers/tourController')
 
-const reviewController = require('./../controllers/reviewController');
+// const reviewController = require('./../controllers/reviewController');
+
+const reviewRouter = require('./../routes/reviewRoutes');
 
 const authController = require('./../controllers/authController');
 
 const router = express.Router();
+
+// when req route is /:tourId/reviews, use reviewRouter
+router.use('/:tourId/reviews', reviewRouter);
+// router
+//     .route('/:tourId/reviews')
+//     .post(
+//         authController.protect,
+//         authController.restrictTo('user'),
+//         reviewController.createReview
+//     )
+
+
 
 // get tour id
 // router.param('id', tourController.checkID);
@@ -49,12 +63,6 @@ router
       tourController.deleteTour
   );
 
-router
-    .route('/:tourId/reviews')
-    .post(
-        authController.protect,
-        authController.restrictTo('user'),
-        reviewController.createReview
-    )
+
 
 module.exports = router;

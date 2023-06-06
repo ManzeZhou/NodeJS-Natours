@@ -16,7 +16,7 @@ exports.getAllReviews = catchAsync(async (req, res, next ) => {
 });
 
 exports.createReview = catchAsync(async (req, res, next) => {
-    // if there is no tour id in the req.body
+    // if there is no tour id / user id in the req.body, get tourId and userId from req
     if(!req.body.tour) req.body.tour = req.params.tourId;
     if(!req.body.user) req.body.user = req.user.id;
 
