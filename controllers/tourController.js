@@ -3,11 +3,11 @@
 // define tour model in the database
 const Tour = require('../models/tourModel');
 
-const APIFeatures = require('./../utils/apiFeatures');
+// const APIFeatures = require('./../utils/apiFeatures');
 
 const catchAsync = require('./../utils/catchAsync');
 
-const AppError = require('./../utils/appError');
+// const AppError = require('./../utils/appError');
 
 const factory = require('./handlerFactory');
 
@@ -49,192 +49,194 @@ exports.aliasTopTours = (req, res, next) => {
 //   next();
 // };
 
-exports.getAllTours = catchAsync(async (req, res, next) => {
-  // execute query
-  const features = new APIFeatures(Tour.find(), req.query)
-    .filter()
-    .sort()
-    .limitFields()
-    .pagination();
-  const tours = await features.query;
-
-  res.status(200).json({
-    status: 'success',
-    results: tours.length,
-    data: {
-      tours,
-    },
-  });
-  // try {
-  //   //127.0.0.1:3000/api/v1/tours?duration=5&difficulty=easy; Express use req.query save param object
-  //   // console.log(req.query);
-  //   // build query
-  //   // 1 Filtering
-  //   // const queryObj = { ...req.query };
-  //   // const excludedFields = ['page', 'sort', 'limit', 'fields'];
-  //   // // filter out excludedFields
-  //   // excludedFields.forEach(el => delete queryObj[el]);
-  //   // console.log(req.query, queryObj);
-  //
-  //   // 2 Advanced Filtering
-  //   // 127.0.0.1:3000/api/v1/tours?duration[gte]=5&difficulty=easy find all tours that duration >= 5
-  //   // req.query = { duration: { gte: '5' }, difficulty: 'easy' }
-  //   // mongo db { duration: { $gte: '5' }, difficulty: 'easy' }
-  //   // replace special string into mongo db command: gte/greater=, gt/greater than, lte/less=, lt/less than
-  //   // let queryStr = JSON.stringify(queryObj);
-  //   // queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
-  //   //
-  //   //
-  //   // // get Tours data from MongoDB database also filter data
-  //   // // Mongoose Method 1
-  //   // let query =  Tour.find(JSON.parse(queryStr));
-  //
-  //   // 3 Sorting
-  //   // if there is a sorting field in request\
-  //   // price: low to high -price: high to low
-  //   // if(req.query.sort) {
-  //   //   // sort ('price ratingsAverage')
-  //   //   const sortBy = req.query.sort.split(',').join(' ');
-  //   //   query = query.sort(sortBy);
-  //   // } else {
-  //   //   // if user doesn't input req.param, set a default one
-  //   //   // query=query.sort('-createdAt');
-  //   //   query=query.sort('-createdAt _id');
-  //   // }
-  //
-  //   // 4 Field
-  //   // limiting: filter the data to only get some fields
-  //   //127.0.0.1:3000/api/v1/tours?fields=name,duration,difficulty,price
-  //   // if(req.query.fields) {
-  //   //   const fields = req.query.fields.split(',').join(' ');
-  //   //   query = query.select(fields);
-  //   // } else {
-  //   //   // set default: remove some fields: - to excluding
-  //   //   query= query.select('-__v');
-  //   // }
-  //
-  //   // 5 Pagination
-  //   // set default page and limit, transfer string into num
-  //   // const page = req.query.page * 1 || 1;
-  //   // const limit = req.query.limit * 1 || 100;
-  //   // const skip = (page - 1) * limit;
-  //   //
-  //   // // page=3&limit=10 skip how many tours with each page limit
-  //   // query = query.skip(skip).limit(limit);
-  //   //
-  //   // // if skip number is greater than data number
-  //   // if (req.query.page) {
-  //   //   const numTours = await Tour.countDocuments();
-  //   //   if (skip >= numTours) throw new Error('This page does not exist');
-  //   // }
-  //
-  //   // execute query
-  //   const features = new APIFeatures(Tour.find(), req.query)
-  //     .filter()
-  //     .sort()
-  //     .limitFields()
-  //     .pagination();
-  //   const tours = await features.query;
-  //   // const tours = await query;
-  //
-  //   // const tours = await Tour.find({
-  //   //   duration: 5,
-  //   //   difficulty: 'easy'
-  //   // });
-  //
-  //   // Mongoose Method 2
-  //   // const tours = await Tour.find().where('duration').equals(5).where('difficulty').equals('easy');
-  //
-  //   // console.log(req.requestTime);
-  //   res.status(200).json({
-  //     status: 'success',
-  //     // requestedAt: req.requestTime
-  //     results: tours.length,
-  //     data: {
-  //       tours,
-  //     },
-  //   });
-  // } catch (err) {
-  //   res.status(404).json({
-  //     status: 'fail',
-  //     message: err,
-  //   });
-  // }
-});
+exports.getAllTours = factory.getAll(Tour);
+// exports.getAllTours = catchAsync(async (req, res, next) => {
+//   // execute query
+//   const features = new APIFeatures(Tour.find(), req.query)
+//     .filter()
+//     .sort()
+//     .limitFields()
+//     .pagination();
+//   const tours = await features.query;
+//
+//   res.status(200).json({
+//     status: 'success',
+//     results: tours.length,
+//     data: {
+//       tours,
+//     },
+//   });
+//   // try {
+//   //   //127.0.0.1:3000/api/v1/tours?duration=5&difficulty=easy; Express use req.query save param object
+//   //   // console.log(req.query);
+//   //   // build query
+//   //   // 1 Filtering
+//   //   // const queryObj = { ...req.query };
+//   //   // const excludedFields = ['page', 'sort', 'limit', 'fields'];
+//   //   // // filter out excludedFields
+//   //   // excludedFields.forEach(el => delete queryObj[el]);
+//   //   // console.log(req.query, queryObj);
+//   //
+//   //   // 2 Advanced Filtering
+//   //   // 127.0.0.1:3000/api/v1/tours?duration[gte]=5&difficulty=easy find all tours that duration >= 5
+//   //   // req.query = { duration: { gte: '5' }, difficulty: 'easy' }
+//   //   // mongo db { duration: { $gte: '5' }, difficulty: 'easy' }
+//   //   // replace special string into mongo db command: gte/greater=, gt/greater than, lte/less=, lt/less than
+//   //   // let queryStr = JSON.stringify(queryObj);
+//   //   // queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
+//   //   //
+//   //   //
+//   //   // // get Tours data from MongoDB database also filter data
+//   //   // // Mongoose Method 1
+//   //   // let query =  Tour.find(JSON.parse(queryStr));
+//   //
+//   //   // 3 Sorting
+//   //   // if there is a sorting field in request\
+//   //   // price: low to high -price: high to low
+//   //   // if(req.query.sort) {
+//   //   //   // sort ('price ratingsAverage')
+//   //   //   const sortBy = req.query.sort.split(',').join(' ');
+//   //   //   query = query.sort(sortBy);
+//   //   // } else {
+//   //   //   // if user doesn't input req.param, set a default one
+//   //   //   // query=query.sort('-createdAt');
+//   //   //   query=query.sort('-createdAt _id');
+//   //   // }
+//   //
+//   //   // 4 Field
+//   //   // limiting: filter the data to only get some fields
+//   //   //127.0.0.1:3000/api/v1/tours?fields=name,duration,difficulty,price
+//   //   // if(req.query.fields) {
+//   //   //   const fields = req.query.fields.split(',').join(' ');
+//   //   //   query = query.select(fields);
+//   //   // } else {
+//   //   //   // set default: remove some fields: - to excluding
+//   //   //   query= query.select('-__v');
+//   //   // }
+//   //
+//   //   // 5 Pagination
+//   //   // set default page and limit, transfer string into num
+//   //   // const page = req.query.page * 1 || 1;
+//   //   // const limit = req.query.limit * 1 || 100;
+//   //   // const skip = (page - 1) * limit;
+//   //   //
+//   //   // // page=3&limit=10 skip how many tours with each page limit
+//   //   // query = query.skip(skip).limit(limit);
+//   //   //
+//   //   // // if skip number is greater than data number
+//   //   // if (req.query.page) {
+//   //   //   const numTours = await Tour.countDocuments();
+//   //   //   if (skip >= numTours) throw new Error('This page does not exist');
+//   //   // }
+//   //
+//   //   // execute query
+//   //   const features = new APIFeatures(Tour.find(), req.query)
+//   //     .filter()
+//   //     .sort()
+//   //     .limitFields()
+//   //     .pagination();
+//   //   const tours = await features.query;
+//   //   // const tours = await query;
+//   //
+//   //   // const tours = await Tour.find({
+//   //   //   duration: 5,
+//   //   //   difficulty: 'easy'
+//   //   // });
+//   //
+//   //   // Mongoose Method 2
+//   //   // const tours = await Tour.find().where('duration').equals(5).where('difficulty').equals('easy');
+//   //
+//   //   // console.log(req.requestTime);
+//   //   res.status(200).json({
+//   //     status: 'success',
+//   //     // requestedAt: req.requestTime
+//   //     results: tours.length,
+//   //     data: {
+//   //       tours,
+//   //     },
+//   //   });
+//   // } catch (err) {
+//   //   res.status(404).json({
+//   //     status: 'fail',
+//   //     message: err,
+//   //   });
+//   // }
+// });
 
 // define a variable id for tours
 // question mark ? for params mean do not need to have it, its optional
-exports.getTour = catchAsync(async (req, res, next) => {
-  // find the specific tour based on id in database
-  // use popluate to replace guides id with actual user info, it is not shown in the database but will show after query with tour id
-  const tour = await Tour.findById(req.params.id).populate('Reviews');
-
-  // if id format is correct but find null tour: 404 error
-  if (!tour) {
-    return next(new AppError('No tour found with that ID', 404));
-  }
-  // Tour.findOne({_id: req.params.id}) based on mongo db
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour,
-    },
-  });
-  // try {
-  //   // find the specific tour based on id in database
-  //   const tour = await Tour.findById(req.params.id);
-  //
-  //   // Tour.findOne({_id: req.params.id}) based on mongo db
-  //
-  //   res.status(200).json({
-  //     status: 'success',
-  //     data: {
-  //       tour,
-  //     },
-  //   });
-  // } catch (err) {
-  //   res.status(404).json({
-  //     status: 'fail',
-  //     message: err,
-  //   });
-  // }
-  // send back all the tours
-  // console.log("req.params", req.params);
-
-  // id comes from tours' id, find the id from request
-  // trans string into number
-  // const id = req.params.id * 1;
-  // if tour id does not exist
-  // Solution 1:
-  // if(id > tours.length) {
-  //     return res.status(404).json({
-  //         status: 'failed',
-  //         message: 'Invalid ID'
-  //     })
-  // }
-  // const tour = tours.find(el => el.id === id);
-
-  // Solution 2: if didn't find match tour
-  // if(!tour) {
-  //     return res.status(404).json({
-  //         status: 'failed',
-  //         message: 'Invalid ID'
-  //     })
-  // }
-
-  // res.status(200).json({
-  //   status: "success",
-  //   data: {
-  //     tour
-  //   }
-  //   // result: tours.length,
-  //   // data: {
-  //   //     tours
-  //   //     //tours: tours
-  //   // }
-  // });
-});
+exports.getTour = factory.getOne(Tour,{ path: 'Reviews' });
+// exports.getTour = catchAsync(async (req, res, next) => {
+//   // find the specific tour based on id in database
+//   // use popluate to replace guides id with actual user info, it is not shown in the database but will show after query with tour id
+//   const tour = await Tour.findById(req.params.id).populate('Reviews');
+//
+//   // if id format is correct but find null tour: 404 error
+//   if (!tour) {
+//     return next(new AppError('No tour found with that ID', 404));
+//   }
+//   // Tour.findOne({_id: req.params.id}) based on mongo db
+//
+//   res.status(200).json({
+//     status: 'success',
+//     data: {
+//       tour,
+//     },
+//   });
+//   // try {
+//   //   // find the specific tour based on id in database
+//   //   const tour = await Tour.findById(req.params.id);
+//   //
+//   //   // Tour.findOne({_id: req.params.id}) based on mongo db
+//   //
+//   //   res.status(200).json({
+//   //     status: 'success',
+//   //     data: {
+//   //       tour,
+//   //     },
+//   //   });
+//   // } catch (err) {
+//   //   res.status(404).json({
+//   //     status: 'fail',
+//   //     message: err,
+//   //   });
+//   // }
+//   // send back all the tours
+//   // console.log("req.params", req.params);
+//
+//   // id comes from tours' id, find the id from request
+//   // trans string into number
+//   // const id = req.params.id * 1;
+//   // if tour id does not exist
+//   // Solution 1:
+//   // if(id > tours.length) {
+//   //     return res.status(404).json({
+//   //         status: 'failed',
+//   //         message: 'Invalid ID'
+//   //     })
+//   // }
+//   // const tour = tours.find(el => el.id === id);
+//
+//   // Solution 2: if didn't find match tour
+//   // if(!tour) {
+//   //     return res.status(404).json({
+//   //         status: 'failed',
+//   //         message: 'Invalid ID'
+//   //     })
+//   // }
+//
+//   // res.status(200).json({
+//   //   status: "success",
+//   //   data: {
+//   //     tour
+//   //   }
+//   //   // result: tours.length,
+//   //   // data: {
+//   //   //     tours
+//   //   //     //tours: tours
+//   //   // }
+//   // });
+// });
 
 exports.createTour = factory.createOne(Tour);
 // exports.createTour = catchAsync(async (req, res, next) => {
