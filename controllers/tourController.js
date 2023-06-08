@@ -9,6 +9,8 @@ const catchAsync = require('./../utils/catchAsync');
 
 const AppError = require('./../utils/appError');
 
+const factory = require('./handlerFactory');
+
 // use alias to prefill the req.query
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = '5';
@@ -351,31 +353,32 @@ exports.updateTour = catchAsync(async (req, res, next) => {
 });
 
 // delete request
-exports.deleteTour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findByIdAndDelete(req.params.id);
-
-  if (!tour) {
-    return next(new AppError('No tour found with that ID', 404));
-  }
-
-  res.status(204).json({
-    status: 'success',
-    data: null,
-  });
-  // try {
-  //   await Tour.findByIdAndDelete(req.params.id);
-  //
-  //   res.status(204).json({
-  //     status: 'success',
-  //     data: null,
-  //   });
-  // } catch (err) {
-  //   res.status(404).json({
-  //     status: 'fail',
-  //     message: err,
-  //   });
-  // }
-});
+exports.deleteTour = factory.deleteOne(Tour);
+// exports.deleteTour = catchAsync(async (req, res, next) => {
+//   const tour = await Tour.findByIdAndDelete(req.params.id);
+//
+//   if (!tour) {
+//     return next(new AppError('No tour found with that ID', 404));
+//   }
+//
+//   res.status(204).json({
+//     status: 'success',
+//     data: null,
+//   });
+//   // try {
+//   //   await Tour.findByIdAndDelete(req.params.id);
+//   //
+//   //   res.status(204).json({
+//   //     status: 'success',
+//   //     data: null,
+//   //   });
+//   // } catch (err) {
+//   //   res.status(404).json({
+//   //     status: 'fail',
+//   //     message: err,
+//   //   });
+//   // }
+// });
 
 // calculate tours statistic by using mongodb pipeline
 exports.getTourStats = catchAsync(async (req, res, next) => {
