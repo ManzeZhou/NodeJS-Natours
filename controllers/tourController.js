@@ -236,121 +236,124 @@ exports.getTour = catchAsync(async (req, res, next) => {
   // });
 });
 
-exports.createTour = catchAsync(async (req, res, next) => {
-  const newTour = await Tour.create(req.body);
-
-  res.status(201).json({
-    status: 'success',
-    data: {
-      tour: newTour,
-    },
-  });
-  // try {
-  //   // create tour to the cloud database
-  //   // method 1:
-  //   // const newTour = new Tour({})
-  //   // newTour.save()
-  //   //create a schema for tour
-  //
-  //   // testing create tour in mongodb database
-  //
-  //   // const testTour = new Tour({
-  //   //   name: 'The Park Camper',
-  //   //    rating: 4.7,
-  //   //   price: 997,
-  //   // });
-  //   //  save tour to the database
-  //   // testTour.save().then(doc => {
-  //   //   console.log(doc);
-  //   // }).catch(err => {
-  //   //   console.log('ERROR ----> :',err)
-  //   // });
-  //
-  //   // method 2: use create()
-  //   const newTour = await Tour.create(req.body);
-  //
-  //   res.status(201).json({
-  //     status: 'success',
-  //     data: {
-  //       tour: newTour,
-  //     },
-  //   });
-  // } catch (err) {
-  //   res.status(400).json({
-  //     status: 'fail',
-  //     message: err,
-  //   });
-  // }
-  // use postman to post a request with body like this: {
-  //     "name": "Test Tour",
-  //     "duration": 10,
-  //     "difficulty": "easy"
-  // }
-  // console.log(req.body);
-
-  // const newId = tours[tours.length - 1].id + 1;
-  // // Object.assign combine two objects together
-  // const newTour = Object.assign({ id: newId }, req.body);
-  // tours.push(newTour);
-
-  // add new tour into the file and show it on the page
-  // fs.writeFile(
-  //   `${__dirname}/../dev-data/data/tours-simple.json`,
-  //   JSON.stringify(tours),
-  //   err => {
-  //     res.status(201).json({
-  //       status: "success",
-  //       data: {
-  //         tour: newTour
-  //       }
-  //     });
-  //   });
-});
+exports.createTour = factory.createOne(Tour);
+// exports.createTour = catchAsync(async (req, res, next) => {
+//   const newTour = await Tour.create(req.body);
+//
+//   res.status(201).json({
+//     status: 'success',
+//     data: {
+//       tour: newTour,
+//     },
+//   });
+//   // try {
+//   //   // create tour to the cloud database
+//   //   // method 1:
+//   //   // const newTour = new Tour({})
+//   //   // newTour.save()
+//   //   //create a schema for tour
+//   //
+//   //   // testing create tour in mongodb database
+//   //
+//   //   // const testTour = new Tour({
+//   //   //   name: 'The Park Camper',
+//   //   //    rating: 4.7,
+//   //   //   price: 997,
+//   //   // });
+//   //   //  save tour to the database
+//   //   // testTour.save().then(doc => {
+//   //   //   console.log(doc);
+//   //   // }).catch(err => {
+//   //   //   console.log('ERROR ----> :',err)
+//   //   // });
+//   //
+//   //   // method 2: use create()
+//   //   const newTour = await Tour.create(req.body);
+//   //
+//   //   res.status(201).json({
+//   //     status: 'success',
+//   //     data: {
+//   //       tour: newTour,
+//   //     },
+//   //   });
+//   // } catch (err) {
+//   //   res.status(400).json({
+//   //     status: 'fail',
+//   //     message: err,
+//   //   });
+//   // }
+//   // use postman to post a request with body like this: {
+//   //     "name": "Test Tour",
+//   //     "duration": 10,
+//   //     "difficulty": "easy"
+//   // }
+//   // console.log(req.body);
+//
+//   // const newId = tours[tours.length - 1].id + 1;
+//   // // Object.assign combine two objects together
+//   // const newTour = Object.assign({ id: newId }, req.body);
+//   // tours.push(newTour);
+//
+//   // add new tour into the file and show it on the page
+//   // fs.writeFile(
+//   //   `${__dirname}/../dev-data/data/tours-simple.json`,
+//   //   JSON.stringify(tours),
+//   //   err => {
+//   //     res.status(201).json({
+//   //       status: "success",
+//   //       data: {
+//   //         tour: newTour
+//   //       }
+//   //     });
+//   //   });
+// });
 
 // patch request to update data
-exports.updateTour = catchAsync(async (req, res, next) => {
-  // update a tour in database based on id
-  const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    // check validators such as required, maxlength
-    runValidators: true,
-  });
-
-  if (!tour) {
-    return next(new AppError('No tour found with that ID', 404));
-  }
-
-  console.log('tour ----->', tour);
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour,
-    },
-  });
-  // try {
-  //   // update a tour in database based on id
-  //   const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-  //     new: true,
-  //     // check validators such as required, maxlength
-  //     runValidators: true,
-  //   });
-  //
-  //   console.log('tour ----->', tour);
-  //
-  //   res.status(200).json({
-  //     status: 'success',
-  //     data: {
-  //       tour,
-  //     },
-  //   });
-  // } catch (err) {
-  //   res.status(404).json({
-  //     status: 'fail',
-  //     message: err,
-  //   });
-  // }
-});
+exports.updateTour = factory.updateOne(Tour);
+// exports.updateTour = catchAsync(async (req, res, next) => {
+//   // update a tour in database based on id
+//   const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+//     new: true,
+//     // check validators such as required, maxlength
+//     runValidators: true,
+//   });
+//
+//   if (!tour) {
+//     return next(new AppError('No tour found with that ID', 404));
+//   }
+//
+//   console.log('tour ----->', tour);
+//
+//   res.status(200).json({
+//     status: 'success',
+//     data: {
+//       tour,
+//     },
+//   });
+//
+//   // try {
+//   //   // update a tour in database based on id
+//   //   const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+//   //     new: true,
+//   //     // check validators such as required, maxlength
+//   //     runValidators: true,
+//   //   });
+//   //
+//   //   console.log('tour ----->', tour);
+//   //
+//   //   res.status(200).json({
+//   //     status: 'success',
+//   //     data: {
+//   //       tour,
+//   //     },
+//   //   });
+//   // } catch (err) {
+//   //   res.status(404).json({
+//   //     status: 'fail',
+//   //     message: err,
+//   //   });
+//   // }
+// });
 
 // delete request
 exports.deleteTour = factory.deleteOne(Tour);
