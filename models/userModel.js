@@ -68,12 +68,6 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-userSchema.pre(/^find/, function (next) {
-  // this points to the current query: only find user's active is true
-  this.find({ active: { $ne: false} });
-  next();
-});
-
 userSchema.pre('save', function (next) {
   // if password doesn't change
   if (!this.isModified('password') || this.isNew) return next();
@@ -81,7 +75,13 @@ userSchema.pre('save', function (next) {
   // transform the time into local time
   this.passwordChangedAt = new Date(new Date().getTime()  - (new Date().getTimezoneOffset() * 60000));
   next();
-})
+});
+
+userSchema.pre(/^find/, function (next) {
+  // this points to the current query: only find user's active is true
+  this.find({ active: { $ne: false} });
+  next();
+});
 
 // const an instance available for all users documents to check input password is as the same as password in the database
 userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
