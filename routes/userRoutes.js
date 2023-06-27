@@ -29,16 +29,22 @@ router
 router
     .patch('/resetPassword/:token', authController.resetPassword);
 
-router
-    .patch('/updateMyPassword', authController.protect, authController.updatePassword);
+// auth required: protect all routes after this middleware
+router.use(authController.protect);
 
 router
-    .patch('/updateMe', authController.protect, updateMe);
+    .patch('/updateMyPassword', authController.updatePassword);
 
 router
-    .delete('/deleteMe', authController.protect, deleteMe)
+    .patch('/updateMe', updateMe);
 
-router.get('/me', authController.protect, userController.getMe, userController.getUser);
+router
+    .delete('/deleteMe', deleteMe)
+
+router.get('/me', userController.getMe, userController.getUser);
+
+// admin only
+router.use(authController.restrictTo('admin'));
 
 router
     .route('/')

@@ -36,7 +36,13 @@ router
 // calculate tours statistic: average ratings/price
 router.route('/tour-stats').get(tourController.getTourStats);
 // calculate tours amount for a given year/month
-router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
+router
+    .route('/monthly-plan/:year')
+    .get(
+        authController.protect,
+        authController.restrictTo('admin', 'lead-guide', 'guide'),
+        tourController.getMonthlyPlan
+    );
 
 // use app.route to refactor url
 // for get all tours and create a tour
@@ -45,8 +51,12 @@ router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
 // protect getAllTours only show tour lists when user sign in
 router
   .route('/')
-  .get(authController.protect, tourController.getAllTours)
-  .post(tourController.createTour);
+  .get(tourController.getAllTours)
+  .post(
+      authController.protect,
+      authController.restrictTo('admin', 'lead-guide'),
+      tourController.createTour
+  );
 // .post(tourController.checkBody,tourController.createTour);
 
 // route for update a tour, get a tour and delete a tour
@@ -56,7 +66,10 @@ router
 router
   .route('/:id')
   .get(tourController.getTour)
-  .patch(tourController.updateTour)
+  .patch(
+      authController.protect,
+      authController.restrictTo('admin', 'lead-guide'),
+      tourController.updateTour)
   .delete(
       authController.protect,
       authController.restrictTo('admin', 'lead-guide'),
