@@ -142,6 +142,8 @@ const tourSchema = new mongoose.Schema(
 // tourSchema.index({ price: 1 });
 tourSchema.index({ price: 1, ratingsAverage: -1 });
 tourSchema.index({ slug: 1 });
+// Geospatial Queries index
+tourSchema.index({ startLocation: '2dsphere'});
 
 // virtual properties: convert duration into weeks not in the database but as soon as get data
 // use function(){} because arrow function does not have this keyword
