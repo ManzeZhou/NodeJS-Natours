@@ -228,12 +228,13 @@ tourSchema.post(/^find/, function (docs, next) {
 
 // 3 AGGREGATION middleware: exclude secret tour in the aggregation:
 // 127.0.0.1:3000/api/v1/tours/tour-stats & 127.0.0.1:3000/api/v1/tours/monthly-plan/2021
-tourSchema.pre('aggregate', function (next) {
-    // console.log('aggregation --->', this.pipeline());
-    // add another match stage for secrete tour at the first pipeline array
-    this.pipeline().unshift({$match: {secretTour: {$ne: true}}});
-    next();
-});
+
+// tourSchema.pre('aggregate', function (next) {
+//     // console.log('aggregation --->', this.pipeline());
+//     // add another match stage for secrete tour at the first pipeline array
+//     this.pipeline().unshift({$match: {secretTour: {$ne: true}}});
+//     next();
+// });
 
 const Tour = mongoose.model('Tour', tourSchema);
 
