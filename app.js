@@ -113,7 +113,11 @@ app.use((req, res, next) => {
 // 3) Routes
 app.get('/', (req, res) => {
   // render pug template
-  res.status(200).render('base');
+  res.status(200).render('base', {
+    // import data into pug template: locals in pug file
+    tour: 'The Forest Hiker',
+    user: 'Jonas'
+  });
 })
 
 const tourRouter = require('./routes/tourRoutes');
