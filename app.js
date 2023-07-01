@@ -8,16 +8,28 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 // preventing params pollution
 const hpp = require('hpp');
-const app = express();
-
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
+const path = require('path');
 
-// 1 MIDDLEWARES
+const app = express();
+
+// Server-side Rendering with Pug Templates
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+
+
+
+
+// 1) GLOBAL MIDDLEWARES
+// set serving static file by using middlewares for overview.html, set public folder as static, only use url:http://127.0.0.1:3000/overview.html
+// app.use(express.static(`${__dirname}/public`));
+app.use(express.static(path.join(__dirname, 'public')));
+
 // only use morgan in development environment
 console.log(process.env.NODE_ENV);
 // Set Security HTTP headers
-app.use(helmet())
+app.use(helmet());
 
 // dev login
 if (process.env.NODE_ENV === 'development') {
@@ -35,8 +47,7 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 
-// set serving static file by using middlewares for overview.html, set public folder as static, only use url:http://127.0.0.1:3000/overview.html
-app.use(express.static(`${__dirname}/public`));
+
 
 // middleware: modify incoming request data otherwise req.body is going to be undefined
 app.use(express.json({ limit: '10kb' }));
@@ -98,6 +109,12 @@ app.use((req, res, next) => {
 
 // delete a tour
 // app.delete('/api/v1/tours/:id', deleteTour);
+
+// 3) Routes
+app.get('/', (req, res) => {
+  // render pug template
+  res.status(200).render('base');
+})
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
