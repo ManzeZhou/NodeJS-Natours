@@ -11,6 +11,10 @@ const hpp = require('hpp');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const path = require('path');
+const tourRouter = require('./routes/tourRoutes');
+const userRouter = require('./routes/userRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
+const viewRouters = require('./routes/viewRoutes');
 
 const app = express();
 
@@ -111,19 +115,7 @@ app.use((req, res, next) => {
 // app.delete('/api/v1/tours/:id', deleteTour);
 
 // 3) Routes
-app.get('/', (req, res) => {
-  // render pug template
-  res.status(200).render('base', {
-    // import data into pug template: locals in pug file
-    tour: 'The Forest Hiker',
-    user: 'Jonas'
-  });
-})
-
-const tourRouter = require('./routes/tourRoutes');
-const userRouter = require('./routes/userRoutes');
-const reviewRouter = require('./routes/reviewRoutes');
-
+app.use('/', viewRouters);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
