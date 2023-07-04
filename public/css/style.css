@@ -669,7 +669,7 @@ body {
   margin-right: 1px;
 }
 .reviews__star--active {
-  fill: #55c57a;
+  fill: #ffcf00;
 }
 .reviews__star--inactive {
   fill: #bbb;
