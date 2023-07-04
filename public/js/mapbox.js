@@ -1,9 +1,11 @@
-/* eslint-disable */
+
 const locations = JSON.parse(document.getElementById('map').dataset.locations);
 console.log(locations);
 
 
+
 mapboxgl.accessToken = 'pk.eyJ1IjoibWFuemV6aG91IiwiYSI6ImNsam5sMTg4bjFhYm0zZHFuZW5tZnF6emYifQ.nCItHTy7qMQr2hfkp6NyZw';
+
 const map = new mapboxgl.Map({
     container: 'map', // container ID
     style: 'mapbox://styles/manzezhou/cljnldjqa00ng01pg8zo5g73c', // style URL

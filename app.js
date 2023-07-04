@@ -15,8 +15,12 @@ const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const viewRouters = require('./routes/viewRoutes');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+
 
 const app = express();
+
 
 // Server-side Rendering with Pug Templates
 app.set('view engine', 'pug');
@@ -33,7 +37,32 @@ app.use(express.static(path.join(__dirname, 'public')));
 // only use morgan in development environment
 console.log(process.env.NODE_ENV);
 // Set Security HTTP headers
-app.use(helmet());
+// app.use(
+//     helmet()
+// );
+
+
+app.use(
+    cors({
+      origin: 'http://localhost:3000',
+      credentials: true,
+    })
+);
+app.use(
+    helmet.contentSecurityPolicy({
+      directives: {
+        defaultSrc: ["'self'", 'https:', 'http:', 'data:', 'ws:'],
+        baseUri: ["'self'"],
+        fontSrc: ["'self'", 'https:', 'http:', 'data:'],
+        scriptSrc: ["'self'", 'https:', 'http:', 'blob:'],
+        styleSrc: ["'self'", "'unsafe-inline'", 'https:', 'http:'],
+      },
+    })
+);
+
+
+
+
 
 // dev login
 if (process.env.NODE_ENV === 'development') {
@@ -55,6 +84,8 @@ app.use('/api', limiter);
 
 // middleware: modify incoming request data otherwise req.body is going to be undefined
 app.use(express.json({ limit: '10kb' }));
+// parser data from cookie
+app.use(cookieParser());
 
 // Data sanitization against NoSQL query injection
 // filter out all $ and .
@@ -82,6 +113,7 @@ app.use(hpp({
 app.use((req, res, next) => {
   // add current time to the request
   req.requestTime = new Date().toISOString();
+    // console.log(req.cookies);
   // console.log(req.headers);
   next();
 });

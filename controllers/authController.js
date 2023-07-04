@@ -27,7 +27,8 @@ const createSendToken = (user, statusCode, res) => {
         expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
         httpOnly: true
     };
-    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+    // in production mode, hide jwt in the browser
+    // if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
     res.cookie('jwt', token, cookieOptions);
     // remove password from output
@@ -53,7 +54,7 @@ exports.signup = catchAsync(async (req, res, next) => {
         role: req.body.role
     });
 
-createSendToken(newUser, 201, res);
+    createSendToken(newUser, 201, res);
     // const token = signToken(newUser._id);
     //
     // res.status(201).json({
@@ -93,8 +94,12 @@ exports.login = catchAsync(async (req, res, next) => {
 exports.protect = catchAsync(async (req, res, next) => {
     let token;
     // 1) Getting token and check if it exists
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    if (
+        req.headers.authorization &&
+        req.headers.authorization.startsWith('Bearer')) {
         token = req.headers.authorization.split(' ')[1];
+    } else if (req.cookies.jwt) {
+        token = req.cookies.jwt;
     }
 
 
@@ -177,7 +182,10 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
     // convert time into local time
     // new Date(new Date().getTime()  - (new Date().getTimezoneOffset() * 60000))
-    const user = await User.findOne({passwordResetToken: hashedToken, passwordResetExpires: {$gt: new Date(new Date().getTime()  - (new Date().getTimezoneOffset() * 60000))}});
+    const user = await User.findOne({
+        passwordResetToken: hashedToken,
+        passwordResetExpires: {$gt: new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000))}
+    });
     // 2) if token has not expired and there is the user, set new password
     if (!user) {
 
@@ -208,4 +216,39 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     await user.save();
     // 4) Log user in, send JWT
     createSendToken(user, 200, res);
-})
+});
+
+// Only for rendered pages, no errors!
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+
+   try {
+       // 1) Verify token
+       if (req.cookies.jwt) {
+
+           const decoded = await promisify(jwt.verify)(
+               req.cookies.jwt,
+               process.env.JWT_SECRET
+           );
+
+           // 2) Check if user still exists
+           const currentUser = await User.findById(decoded.id);
+           if (!currentUser) {
+               return next();
+           }
+
+           // 3) Check if user changed password after the token was issued
+           if (currentUser.changedPasswordAfter(decoded.iat)) {
+               return next();
+           }
+
+           // There is a Logged-in user
+           res.locals.user = currentUser
+           return next();
+       }
+   } catch (e) {
+       return next();
+   }
+    next();
+});
+
+
