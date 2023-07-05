@@ -12059,6 +12059,15 @@ try {
   }
 }
 
+},{}],"consts.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.mapboxKey = void 0;
+var mapboxKey = 'pk.eyJ1IjoibWFuemV6aG91IiwiYSI6ImNsam5sMTg4bjFhYm0zZHFuZW5tZnF6emYifQ.nCItHTy7qMQr2hfkp6NyZw';
+exports.mapboxKey = mapboxKey;
 },{}],"mapbox.js":[function(require,module,exports) {
 "use strict";
 
@@ -12066,11 +12075,12 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.displayMap = void 0;
+var _consts = require("./consts");
 // const locations = JSON.parse(document.getElementById('map').dataset.locations);
 // console.log(locations);
 
 var displayMap = function displayMap(locations) {
-  mapboxgl.accessToken = 'pk.eyJ1IjoibWFuemV6aG91IiwiYSI6ImNsam5sMTg4bjFhYm0zZHFuZW5tZnF6emYifQ.nCItHTy7qMQr2hfkp6NyZw';
+  mapboxgl.accessToken = _consts.mapboxKey;
   var map = new mapboxgl.Map({
     container: 'map',
     // container ID
@@ -12112,7 +12122,7 @@ var displayMap = function displayMap(locations) {
   });
 };
 exports.displayMap = displayMap;
-},{}],"index.js":[function(require,module,exports) {
+},{"./consts":"consts.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 require("core-js/modules/es6.array.copy-within.js");

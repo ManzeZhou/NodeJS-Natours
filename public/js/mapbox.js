@@ -2,8 +2,10 @@
 // const locations = JSON.parse(document.getElementById('map').dataset.locations);
 // console.log(locations);
 
+import {mapboxKey} from "./consts";
+
 export  const displayMap = locations => {
-    mapboxgl.accessToken = 'pk.eyJ1IjoibWFuemV6aG91IiwiYSI6ImNsam5sMTg4bjFhYm0zZHFuZW5tZnF6emYifQ.nCItHTy7qMQr2hfkp6NyZw';
+    mapboxgl.accessToken = mapboxKey;
 
     const map = new mapboxgl.Map({
         container: 'map', // container ID
