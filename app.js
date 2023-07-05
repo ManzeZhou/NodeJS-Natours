@@ -113,7 +113,7 @@ app.use(hpp({
 app.use((req, res, next) => {
   // add current time to the request
   req.requestTime = new Date().toISOString();
-    // console.log(req.cookies);
+    console.log(req.cookies);
   // console.log(req.headers);
   next();
 });
