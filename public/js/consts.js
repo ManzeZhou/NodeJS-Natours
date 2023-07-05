@@ -1,1 +1,0 @@
-export const mapboxKey = 'pk.eyJ1IjoibWFuemV6aG91IiwiYSI6ImNsam5sMTg4bjFhYm0zZHFuZW5tZnF6emYifQ.nCItHTy7qMQr2hfkp6NyZw'
