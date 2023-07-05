@@ -24,10 +24,15 @@ exports.getTour = catchAsync(async (req, res, next) => {
     // 2) Build template
 
     // 3) Render
-    res.status(200).set(
+    res.status(200)
+        .set(
         'Content-Security-Policy',
         "default-src 'self' https://*.mapbox.com ;base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src https://cdnjs.cloudflare.com https://api.mapbox.com 'self' blob: ;script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests;"
     )
+    //     .set(
+    //         'Content-Security-Policy',
+    //         "default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;"
+    //     )
         .render('tour', {
         title: `${tour.name} Tour`,
         tour
