@@ -96,7 +96,8 @@ exports.logout = (req, res) => {
         httpOnly: true,
     });
     res.status(200).json({status: 'success'});
-}
+};
+
 
 // protect getAllTours only show tour lists when user sign in
 exports.protect = catchAsync(async (req, res, next) => {
