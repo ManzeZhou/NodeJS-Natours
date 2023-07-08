@@ -134,6 +134,8 @@ app.use('/api', limiter);
 
 // middleware: modify incoming request data otherwise req.body is going to be undefined
 app.use(express.json({ limit: '10kb' }));
+// parse data from url response
+app.use(express.urlencoded({ extended: true, limit: '10kb'}));
 // parser data from cookie
 app.use(cookieParser());
 
