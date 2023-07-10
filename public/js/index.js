@@ -18,7 +18,8 @@ if (mapBox) {
     const locations = JSON.parse(mapBox.dataset.locations);
 
     displayMap(locations);
-};
+}
+;
 
 
 if (loginForm) {
@@ -28,17 +29,23 @@ if (loginForm) {
         const password = document.getElementById('password').value;
         login(email, password);
     });
-};
+}
+;
 
 if (logOutBtn) logOutBtn.addEventListener('click', logout);
 
 if (userDataForm)
     userDataForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    updateSettings({name, email}, 'data');
-});
+        e.preventDefault();
+
+        const form = new FormData();
+        form.append('name', document.getElementById('name').value);
+        form.append('email', document.getElementById('email').value);
+        // upload photo
+        form.append('photo', document.getElementById('photo').files[0]);
+        console.log(form);
+        updateSettings(form, 'data');
+    });
 
 if (userPasswordForm)
     userPasswordForm.addEventListener('submit', async e => {
@@ -48,9 +55,11 @@ if (userPasswordForm)
         const password = document.getElementById('password').value;
         const passwordConfirm = document.getElementById('password-confirm').value;
         await updateSettings(
-            { passwordCurrent,
+            {
+                passwordCurrent,
                 password,
-                passwordConfirm}, 'password'
+                passwordConfirm
+            }, 'password'
         );
         // clear input fields
         document.querySelector('.btn--save--password').textContent = 'Save password';

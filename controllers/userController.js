@@ -20,6 +20,7 @@ const sharp = require("sharp");
 //     cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
 //   }
 // });
+
 // store file in the memory
 const multerStorage = multer.memoryStorage();
 
