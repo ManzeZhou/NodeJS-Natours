@@ -14,6 +14,8 @@ const {
 const authController = require('./../controllers/authController');
 const userController = require('./../controllers/userController');
 
+
+
 const router = express.Router();
 
 // route for user
@@ -39,7 +41,8 @@ router
     .patch('/updateMyPassword', authController.updatePassword);
 
 router
-    .patch('/updateMe', updateMe);
+    // limit upload only one file
+    .patch('/updateMe', userController.uploadUserPhoto,updateMe);
 
 router
     .delete('/deleteMe', deleteMe)

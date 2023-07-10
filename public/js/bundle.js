@@ -12239,13 +12239,14 @@ var signup = /*#__PURE__*/function () {
               location.assign('/');
             }, 1000);
           }
-          _context.next = 10;
+          _context.next = 11;
           break;
         case 7:
           _context.prev = 7;
           _context.t0 = _context["catch"](0);
+          console.log(_context.t0.response);
           (0, _alerts.showAlert)('error', _context.t0.response.data.message);
-        case 10:
+        case 11:
         case "end":
           return _context.stop();
       }
