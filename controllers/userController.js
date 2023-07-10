@@ -6,19 +6,22 @@ const AppError = require('../utils/appError');
 
 const factory = require('./handlerFactory');
 const multer = require("multer");
+const sharp = require("sharp");
 
-// store image file with name
-const multerStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    // first arguments: error, second is destination
-    cb(null, 'public/img/users');
-  },
-  filename: (req, file, cb) => {
-    // user-id-timestamp.jpeg
-    const ext = file.mimetype.split('/')[1];
-    cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
-  }
-});
+// store image file with name to the disk
+// const multerStorage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     // first arguments: error, second is destination
+//     cb(null, 'public/img/users');
+//   },
+//   filename: (req, file, cb) => {
+//     // user-id-timestamp.jpeg
+//     const ext = file.mimetype.split('/')[1];
+//     cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
+//   }
+// });
+// store file in the memory
+const multerStorage = multer.memoryStorage();
 
 // test if upload file is an image
 const multerFilter = (req, file, cb) => {
@@ -37,6 +40,20 @@ const upload = multer({
 });
 
 exports.uploadUserPhoto = upload.single('photo');
+
+// resizing user photo
+exports.resizeUserPhoto = (req, res, next) => {
+  if (!req.file) return next();
+  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+  //get file from memory: need square photo so height and weight should be same
+  sharp(req.file.buffer)
+      .resize(500, 500)
+      .toFormat('jpeg')
+      .jpeg({quality: 90})
+      .toFile(`public/img/users/${req.file.filename}`);
+
+  next();
+}
 
 exports.getAllUsers = factory.getAll(User);
 // exports.getAllUsers = catchAsync(async (req, res, next) => {

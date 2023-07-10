@@ -42,7 +42,13 @@ router
 
 router
     // limit upload only one file
-    .patch('/updateMe', userController.uploadUserPhoto,updateMe);
+    .patch(
+        '/updateMe',
+        userController.uploadUserPhoto,
+        // resize user photo
+        userController.resizeUserPhoto,
+        updateMe
+    );
 
 router
     .delete('/deleteMe', deleteMe)
