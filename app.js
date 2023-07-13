@@ -17,6 +17,8 @@ const reviewRouter = require('./routes/reviewRoutes');
 const viewRouters = require('./routes/viewRoutes');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const bookingRouter = require('./routes/bookingRoutes');
+
 
 
 const app = express();
@@ -203,6 +205,7 @@ app.use('/', viewRouters);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/bookings', bookingRouter);
 
 // manage unhanding routes
 app.all('*', (req, res, next) => {
