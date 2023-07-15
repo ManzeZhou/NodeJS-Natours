@@ -39,17 +39,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 // only use morgan in development environment
 console.log(process.env.NODE_ENV);
 // Set Security HTTP headers
-// app.use(
-//     helmet()
-// );
-
-
 app.use(
-    cors({
-      origin: 'http://localhost:3000',
-      credentials: true,
-    })
+    helmet()
 );
+
+
+
 
 app.use(
     helmet({
@@ -100,19 +95,16 @@ app.use(
         },
     })
 );
-// app.use(
-//     helmet.contentSecurityPolicy({
-//       directives: {
-//         defaultSrc: ["'self'", 'https:', 'http:', 'data:', 'ws:'],
-//         baseUri: ["'self'"],
-//         fontSrc: ["'self'", 'https:', 'http:', 'data:'],
-//         scriptSrc: ["'self'", 'https:', 'http:', 'blob:'],
-//         styleSrc: ["'self'", "'unsafe-inline'", 'https:', 'http:'],
-//       },
-//     })
-// );
+
+app.use(helmet.crossOriginEmbedderPolicy({ policy: 'credentialless' }));
 
 
+app.use(
+    cors({
+      origin: 'http://localhost:3000',
+      credentials: true,
+    })
+);
 
 
 
