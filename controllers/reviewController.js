@@ -1,6 +1,9 @@
 const Review = require('../models/reviewModel');
 // const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
+const catchAsync = require('./../utils/catchAsync');
+const Booking = require('../models/bookingModel');
+const AppError = require("../utils/appError");
 
 
 exports.getAllReviews = factory.getAll(Review);
@@ -42,6 +45,19 @@ exports.createReview = factory.createOne(Review);
 //         }
 //     });
 // });
+
+// only let user who booked the tour can leave a review
+exports.checkBooking = catchAsync(async (req, res, next) => {
+    const bookings = await Booking.find({
+        user: req.user.id,
+        tour: req.body.tour
+    });
+    if(bookings.length === 0) {
+        return next(new AppError('You can only review the tours you booked', 401));
+    }
+
+    next()
+});
 
 exports.deleteReview = factory.deleteOne(Review);
 exports.updateReview = factory.updateOne(Review);
