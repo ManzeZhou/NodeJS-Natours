@@ -28,10 +28,11 @@ const bookingSchema = new mongoose.Schema({
 
 bookingSchema.pre(/^find/, function (next) {
     // only guides and admin can check bookings
-    this.populate('user').pupulate({
+    this.populate('user').populate({
         path: 'tour',
         select: 'name'
-    })
+    });
+    next();
 })
 
 const Booking = mongoose.model('Booking', bookingSchema)
