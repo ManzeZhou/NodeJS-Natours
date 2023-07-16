@@ -64,7 +64,7 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
             }
         }
     ]);
-    console.log(stats);
+    // console.log(stats);
     // persist/update avg ratings in the database
     // if there is review
     if (stats.length > 0) {
@@ -95,7 +95,7 @@ reviewSchema.post('save', function () {
 // delete or update reviews, update average ratings and its quantity
 reviewSchema.pre(/^findOneAnd/, async function (next) {
     this.r = await this.findOne();
-    console.log(this.r);
+    // console.log(this.r);
     next();
 });
 

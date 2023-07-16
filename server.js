@@ -41,8 +41,8 @@ const server = app.listen(port, () => {
 
 // handle error connection to db if db password is wrong
 process.on('unhandledRejection', (err) => {
-  console.log(err.name, err.message);
-  console.log('unhandled rejection! shutting down...');
+  // console.log(err.name, err.message);
+  // console.log('unhandled rejection! shutting down...');
   // shut down server
   server.close(() => {
     // shut down app

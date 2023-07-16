@@ -42,7 +42,7 @@ exports.uploadTourImages= upload.fields([
 
 // process upload tour images
 exports.resizeTourImages = catchAsync(async (req, res, next) => {
-  console.log(req.files);
+  // console.log(req.files);
   if (req.files.imageCover || !req.files.images) return next();
 
   // 1) Cover image
@@ -652,7 +652,7 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
         )
     );
   }
-  console.log(distance, lat, lng, unit);
+  // console.log(distance, lat, lng, unit);
 
   // query tours
   const tours = await Tour.find({

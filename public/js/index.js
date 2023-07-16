@@ -44,7 +44,7 @@ if (userDataForm)
         form.append('email', document.getElementById('email').value);
         // upload photo
         form.append('photo', document.getElementById('photo').files[0]);
-        console.log(form);
+        // console.log(form);
         updateSettings(form, 'data');
     });
 
