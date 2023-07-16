@@ -18,7 +18,7 @@ export const bookTour = async tourId => {
         //     sessionId: session.data.session.id
         // });
         window.location.replace(session.data.session.url);
-
+// todo tour image broken
     } catch (err) {
 
         console.log(err);

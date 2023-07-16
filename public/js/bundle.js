@@ -12290,6 +12290,7 @@ var bookTour = /*#__PURE__*/function () {
           //     sessionId: session.data.session.id
           // });
           window.location.replace(session.data.session.url);
+          // todo tour image broken
           _context.next = 13;
           break;
         case 9:
