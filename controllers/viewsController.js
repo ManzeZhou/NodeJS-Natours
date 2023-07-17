@@ -33,12 +33,12 @@ exports.getTour = catchAsync(async (req, res, next) => {
         commentExist = tour.reviews.some(
             (review) => review.user.id === res.locals.id
         );
-        console.log('commentExist',commentExist)
+
     }
 
     const booked = !!booking
 
-    console.log('booked',booked)
+
 
     res.status(200)
         .set(
