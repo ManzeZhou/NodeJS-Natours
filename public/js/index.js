@@ -4,6 +4,7 @@ import {displayMap} from "./mapbox";
 import {updateSettings} from "./updateSettings";
 import {signup} from "./signup";
 import {bookTour} from "./stripe";
+import {leaveReview} from "./reviews";
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
@@ -13,6 +14,21 @@ const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
 const signupForm = document.querySelector('.form--signup');
 const bookBtn = document.getElementById('book-tour');
+// submit review
+const reviewDataForm = document.querySelector('.modal-contents');
+if(reviewDataForm) {
+    reviewDataForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const review = document.getElementById('review').value;
+        const rating = Number(document.getElementById('ratings').value);
+        const {user, tour} = JSON.parse(reviewDataForm.dataset.ids);
+
+        leaveReview(review, rating, tour, user);
+
+        document.getElementById('review').textContent = '';
+        document.getElementById('ratings').textContent = '';
+    })
+}
 
 // DELEGATION
 if (mapBox) {

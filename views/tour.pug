@@ -76,9 +76,29 @@ block content
         #map(data-locations=`${JSON.stringify(tour.locations)}`)
 
     section.section-reviews
+
         .reviews
             each review in tour.Reviews
                 +reviewCard(review)
+
+
+
+    // add a review
+    - if (booked === true && commentExist === false)
+        section.section-cta.section-review
+            //button.btn.btn--green.review-save#review-tour Review this tour
+            .cta.cta__review
+                form.modal-contents(data-ids=`${JSON.stringify({user: user.id, tour: tour.id})}`)
+                    //.close +
+                    .form__group.ma-bt-md
+                        label.form__label(for='review') Review
+                        input#review.form__input(type='text', placeholder='Write your review', required, minlength='10')
+                    .form__group.ma-bt-md
+                        label.form__label(for='rating') Rating
+                        input#ratings.form__input(type='number', min='1',max='5', required, minlength='1')
+                    .form__group
+                        button.btn.btn--green.review-save#review-submit Submit
+
 
     section.section-cta
         .cta
@@ -96,3 +116,8 @@ block content
                 else
                     // redirect to login page
                     a.btn.btn--green.span-all-rows(href='/login') Log in to book tour
+
+
+
+
+
